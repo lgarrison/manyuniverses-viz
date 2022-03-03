@@ -1,44 +1,36 @@
-manyuniverses-viz
------------------
+# manyuniverses-viz
 
 This directory contains the scripts used to generate the "Many Universes of AbacusSummit" video, available here: https://abacussummit.readthedocs.io/en/latest/visualizations.html#video-many-universes
 
-Author/License
-~~~~~~~~~~~~~~
+## Author/License
 Lehman Garrison (lgarrison.github.io)
 Apache-2.0 License
 
-Usage
-~~~~~
+## Usage
 1. Make a cubic cutout (a subbox) from each sim using the `cutout_onesim.py` script. LHG used [disBatch](https://github.com/flatironinstitute/disBatch/) with the `cutout.disbatch` task file to run the jobs on the Rusty cluster at Flatiron.
 1. Combine the cutouts into a single "trajectory" file, containing the location of each particle in each cosmology (discarding particles not present in all cosmologies)
 1. Render the movie from the trajectory file, using `render_custom.py`
 
-Source Layout
-~~~~~~~~~~~~~
+## Source Layout
 - `multicosmo.py`: some utilities used by `cutout_onesim.py
 - `cutout_onesim.py`, `make_traj.py`, `render_custom.py`: the main executable scripts to generate the movie
 - `old_notebooks/`: various explorations of ways to select the particles and render the movie
 - `cosmologies.csv`: the cosmologies table, used for loading in some extra info
 
-Developer Details
-~~~~~~~~~~~~~~~~~
-Cutouts
-=======
+## Developer Details
+### Cutouts
 We chose to center the cutout on the biggest halo in the `000` slab.  We're only using the 3% particle subsample, which seems like more than enough for this particular zoom scale and plotting style.  It's interesting to think what we could do with 10% or 100%, though.
 
 We did 40 Mpc/h cubic cutouts, to support a 20 Mpc/h height and a variable width, depending on the aspect ratio.  We did a depth of 20 Mpc/h.  But the cutouts are cubic to support flipping the axes later.
 
 While doing the cutouts, we also compute the 2PCF *on the whole slab*, to get a smooth function to interpolate later.
 
-Trajectories
-============
+### Trajectories
 The matching of particles between cosmologies is done by PID, using the fast `np.intersect1d` function.  About 80% of particles are present in all cosmologies.
 
 While we do the trajectories, we also compute the RR term on the slab level, ignoring any details of the fuzzy/overlapping slab edges.  The shift in the slab-level DC term is negligible.
 
-Rendering
-=========
+### Rendering
 The rendering (`render_custom.py`) is the most complicated part, and most of the effort went into that.
 
 Each frame is rendered as a scatter plot, using the `scatter_density` method that LHG has been using for a while now. The idea is just to color each point by a KDE estimate of the local density of points, and then plot the densest points on top.
@@ -73,8 +65,7 @@ We use the webm container format as it supports VP9 videos and has good support 
 
 One leftover annoyance is that PNG uses RGB colors, while VP9 wants to use CMYK. The colors look a little washed out in the video compared to the PNGs, to my eye. I wasn't able to get RGB-native VP9 to work. But it still looks pretty good overall.
 
-Hosting
-=======
+#### Hosting
 LHG tried hosting the video on YouTube and Vimeo, and it looked awful. The videos were reencoded in the upload process and lost all their quality.
 
 So we use "native" cloud hosting instead.  Backblaze B2 had enough free capacity but not enough free bandwidth. Amazon S3 has free capacity but not free bandwith; however, you can hook up the S3 bucket to the CloudFront load balancer, which has enough free monthly bandwidth for many downloads. So that's how you access the videos now.
