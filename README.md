@@ -21,7 +21,7 @@ Apache-2.0 License
 - `c000.png`: the first frame of the video, saved to disk before encoding starts
 - `environment-rusty.sh`: commands LHG used to set up a shell environment on Rusty at Flatiron
 
-## Developer Details
+## Details for Developers
 ### Cutouts
 We chose to center the cutout on the biggest halo in the `000` slab.  We're only using the 3% particle subsample, which seems like more than enough for this particular zoom scale and plotting style.  It's interesting to think what we could do with 10% or 100%, though.
 
@@ -69,7 +69,7 @@ We use the webm container format as it supports VP9 videos and has good support 
 
 One leftover annoyance is that PNG uses RGB colors, while VP9 wants to use CMYK. The colors look a little washed out in the video compared to the PNGs, to my eye. I wasn't able to get RGB-native VP9 to work. But it still looks pretty good overall.
 
-#### Hosting
+### Hosting
 LHG tried hosting the video on YouTube and Vimeo, and it looked awful. The videos were reencoded in the upload process and lost all their quality.
 
 So we use "native" cloud hosting instead.  Backblaze B2 had enough free capacity but not enough free bandwidth. Amazon S3 has free capacity but not free bandwith; however, you can hook up the S3 bucket to the CloudFront load balancer, which has enough free monthly bandwidth for many downloads. So that's how you access the videos now.
