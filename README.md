@@ -13,10 +13,13 @@ Apache-2.0 License
 1. Render the movie from the trajectory file, using `render_custom.py`
 
 ## Source Layout
-- `multicosmo.py`: some utilities used by `cutout_onesim.py`
 - `cutout_onesim.py`, `make_traj.py`, `render_custom.py`: the main executable scripts to generate the movie
+- `multicosmo.py`: some utilities used by `cutout_onesim.py`
+- `cutout.disbatch`: disBatch script used to run `cutout_onesim.py` over all sims
 - `old_notebooks/`: various explorations of ways to select the particles and render the movie
 - `cosmologies.csv`: the cosmologies table, used for loading in some extra info
+- `c000.png`: the first frame of the video, saved to disk before encoding starts
+- `environment-rusty.sh`: commands LHG used to set up a shell environment on Rusty at Flatiron
 
 ## Developer Details
 ### Cutouts
